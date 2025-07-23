@@ -15,7 +15,7 @@ def search_for_values(r, events):
             event_dict = {}
             for index, event in enumerate(events): #getting values from JSON output
                 event_dict[index] = {}
-                event_name = event["repo"]["name"] #change this to nested dict
+                event_name = event["repo"]["name"]
                 event_type = event["type"]
                 event_name_check.append(event_name)
                 event_type_check.append(event_type)
