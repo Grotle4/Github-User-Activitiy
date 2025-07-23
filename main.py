@@ -37,77 +37,87 @@ def output_sets(event_dict, event_name_check, event_type_check):
     internal_dict = {}
     list_of_dicts = []
 
-    for check in event_name_check:
+    for check in event_name_check: #runs through all task names collected
+        iteration = 0
+        for type in event_type_check:
+            for event in event_dict:
+                name_val = event_dict[event]["name"]  
+                type_val =  event_dict[event]["type"]
+                if check == name_val:
+                    if type == type_val:
+                        iteration += 1
+                        stored_dict["name"] = check
+                        stored_dict["type"] = type
+                        stored_dict["amount"] = iteration
+                        print("iteration: ", iteration)
+                        finished_dict = stored_dict.copy()            
+            else:
+                iteration = 0
+                list_of_dicts.append(finished_dict)
+    print(list_of_dicts)    
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        
+                        
+
+
+
+"""     for check in event_name_check: #runs through Task_tracker, then number guessing game
         new_dict = {}
-        
-        new_dict = {check:{"id": 0, "task" :"N/A" , "amount": 0}}
+        name_list = []
+        new_dict = {check:{"amount": 0}}
         dict_ammount = 0 
+        previous_type = None
         print("dict name", new_dict)
-        for event in event_dict:
+        for event in event_dict: #runs through all events
             name = event_dict[event]["name"]
-            if name == check:
-                for type_check in event_type_check:
+            if name == check: #if the name matches the check being looped through
+                for type_check in event_type_check: #run through push event then create event
                     type = event_dict[event]["type"]
                     print(type)
-                    if type == type_check:
+                    if type == type_check: #if the type matches up
                         print("this is my type: ", type)
-                        if type not in new_dict[check]["task"]:
-                            new_dict[check]= []
-                            new_dict[check].append({"task": type}, "amount: 0"})
+                        if type == previous_type:
+                            new_dict[check]["type"] = type
                             new_dict[check]["amount"] += 1
-                        else:
+                        elif type != previous_type:
                             pass
-                        
-        list_of_dicts.append(new_dict)
-
-                        
-                        
-        
-    print(list_of_dicts)
-    return list_of_dicts
+                            print("done")
+                            list_of_dicts.append(new_dict)
+                previous_type = type """
 
 
-
-
-
-    """ print("AHHHHHHH:", event_type_check)
-    for check in event_name_check:
-        print("1: ",stored_dict)
-        print("iteration loop")
-        for type_check in event_type_check:
-            print("2: ",stored_dict)
-            iteration = 0
-            for index, event in enumerate(event_dict):
-                print("3: ",stored_dict)
-                type_name = event_dict[index]["type"]
-                check_name = event_dict[index]["name"]
-                if check == check_name:
-                    print("name correct")
-                    print("4: ",stored_dict)
-                    if type_check == type_name:
-                        print("type correct")
-                        iteration += 1
-                        stored_dict[check_name][type_check] = iteration
-                        print("5: ",stored_dict)
- """            
-"""     for check in event_name_check:
-        print("iteration loop")
+""" print("AHHHHHHH:", event_type_check)
+for check in event_name_check:
+    print("1: ",stored_dict)
+    print("iteration loop")
+    for type_check in event_type_check:
+        print("2: ",stored_dict)
+        iteration = 0
         for index, event in enumerate(event_dict):
+            print("3: ",stored_dict)
+            type_name = event_dict[index]["type"]
             check_name = event_dict[index]["name"]
             if check == check_name:
                 print("name correct")
-                stored_dict[check_name] = {}
-                print("1:", stored_dict)
-                for type_check in event_type_check:
-                    iteration = 0
-                    print("type_check: ",type_check)
-                    type_name = event_dict[index]["type"]
-                    print("event_type: ", type_name)
-                    if type_check == event_dict[index]["type"]:
-                        iteration += 1
-                        stored_dict[check_name][type_check] = iteration
-                        print("2: ", stored_dict) """
-                
+                print("4: ",stored_dict)
+                if type_check == type_name:
+                    print("type correct")
+                    iteration += 1
+                    stored_dict[check_name][type_check] = iteration
+                    print("5: ",stored_dict)
+"""            
         
 
 event_dict, event_name_check, event_type_check = search_for_values(r,events)
