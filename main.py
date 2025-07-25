@@ -54,10 +54,7 @@ def output_sets(event_dict, event_name_check, event_type_check):
     return list_of_dicts    
 
 def give_output(final_output):
-    event_types =  ["CommitCommentEvent", "CreateEvent", "DeleteEvent", "ForkEvent", "GollumEvent", "IssueCommentEvent", "IssuesEvent", 
-                    "MemberEvent", "PublicEvent", "PullRequestEvent", "PullRequestReviewEvent", "PullRequestReviewCommentEvent", "PullRequestReviewThreadEvent",
-                    "PushEvent", "ReleaseEvent", "SponsorshipEvent", "WatchEvent"]
-    print("Output")
+    print("Output:")
     for event in final_output: #Do this for each event taken
             match event["type"]:
                 case "CommitCommentEvent":
@@ -111,10 +108,14 @@ def check_plural(event, word):
         return word
         
 
+def filter_type(final_output):
+    user = input("Would you like to filter by a certain type or types") #work on this tomorrow
+
+
+
 
 event_dict, event_name_check, event_type_check = search_for_values(r,events)
 final_output = output_sets(event_dict, event_name_check, event_type_check)
-print("final: ", final_output) #take this final output value and output it as print statements in a function
 give_output(final_output)
-
+#Work on making output fancy tomorrow
 
