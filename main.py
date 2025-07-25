@@ -53,11 +53,68 @@ def output_sets(event_dict, event_name_check, event_type_check):
                 list_of_dicts.append(finished_dict) #when loop is finish, append copy of list to final list of dictionaries
     return list_of_dicts    
 
+def give_output(final_output):
+    event_types =  ["CommitCommentEvent", "CreateEvent", "DeleteEvent", "ForkEvent", "GollumEvent", "IssueCommentEvent", "IssuesEvent", 
+                    "MemberEvent", "PublicEvent", "PullRequestEvent", "PullRequestReviewEvent", "PullRequestReviewCommentEvent", "PullRequestReviewThreadEvent",
+                    "PushEvent", "ReleaseEvent", "SponsorshipEvent", "WatchEvent"]
+    print("Output")
+    for event in final_output: #Do this for each event taken
+            match event["type"]:
+                case "CommitCommentEvent":
+                    print(f"Created {event["amount"]} {check_plural(event, "comment")} on {event["name"]}")
+                case "CreateEvent":
+                    print(f"Created {event["amount"]} {check_plural(event, "branch")} on {event["name"]}")
+                case "DeleteEvent":
+                    print(f"Deleted {event["amount"]} {check_plural(event, "branch")} on {event["name"]}")
+                case "ForkEvent":
+                    print(f"Forked {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                case "GollumEvent":
+                    print(f"Created or Updated wiki page {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                case "IssueCommentEvent":
+                    print(f"Had activity {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                case "IssuesEvent":
+                    print(f"Had an issue {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                case "MemberEvent":
+                    print(f"Had an activity with collaborators {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                case "PublicEvent":
+                    print(f"Made repository public {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                case "PullRequestEvent":
+                    print(f"Had Pull Request activity {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                case "PullRequestReviewEvent":
+                    print(f"Reviewed Pull Request {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                case "PullRequestReviewCommentEvent":
+                    print(f"Gave {event["amount"]} {check_plural(event, "comment")} for Pull requests on {event["name"]}")
+                case "PullRequestReviewThreadEvent":
+                    print(f"Gave {event["amount"]} {check_plural(event, "comment")} for Pull request comments on {event["name"]}")
+                case "PushEvent":
+                    print(f"Pushed {event["amount"]} {check_plural(event, "commit")} on {event["name"]}")
+                case "ReleaseEvent":
+                    print(f"Released {event["amount"]} {check_plural(event, "commits")} on {event["name"]}")
+                case "SponsorshipEvent":
+                    print(f"Gave {event["amount"]} Sponsorship {check_plural(event, "listing")} on {event["name"]}")
+                case "WatchEvent":
+                    print(f"Starred {event["amount"]} {check_plural(event, "repository")} on {event["name"]}")
 
+
+                
+
+def check_plural(event, word):
+    if event["amount"] > 1:
+        if word.endswith("h"):
+            return word + "es"
+        elif word.endswith("y"):
+            new_word = word[:-1]
+            return new_word + "ies"
+        else:
+            return word + "s"
+    else:
+        return word
         
+
 
 event_dict, event_name_check, event_type_check = search_for_values(r,events)
 final_output = output_sets(event_dict, event_name_check, event_type_check)
 print("final: ", final_output) #take this final output value and output it as print statements in a function
+give_output(final_output)
 
 
