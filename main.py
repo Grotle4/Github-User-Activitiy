@@ -1,11 +1,11 @@
 import requests
-import json
+import argparse
 
 username = input("Please enter a username: ").lower()
 url = f"https://api.github.com/users/{username}/events"
 r = requests.get(url)
 events = r.json()
-
+filtering_types = False
 
 def search_for_values(r, events):
     try:
@@ -53,10 +53,21 @@ def output_sets(event_dict, event_name_check, event_type_check):
                 list_of_dicts.append(finished_dict) #when loop is finish, append copy of list to final list of dictionaries
     return list_of_dicts    
 
-def give_output(final_output):
+def give_output(final_output,filtering_types,filtered_types):
     print("Output:")
     for event in final_output: #Do this for each event taken
-            match event["type"]:
+            if filtering_types == True:
+                for filtered in filtered_types:
+                    if event["type"].lower() == filtered.lower():
+                        print("working")
+                        output_message(event)
+            else:
+                output_message(event)
+                
+
+
+def output_message(event):
+    match event["type"]:
                 case "CommitCommentEvent":
                     print(f"Created {event["amount"]} {check_plural(event, "comment")} on {event["name"]}")
                 case "CreateEvent":
@@ -91,8 +102,7 @@ def give_output(final_output):
                     print(f"Gave {event["amount"]} Sponsorship {check_plural(event, "listing")} on {event["name"]}")
                 case "WatchEvent":
                     print(f"Starred {event["amount"]} {check_plural(event, "repository")} on {event["name"]}")
-
-
+    
                 
 
 def check_plural(event, word):
@@ -109,13 +119,48 @@ def check_plural(event, word):
         
 
 def filter_type(final_output):
-    user = input("Would you like to filter by a certain type or types") #work on this tomorrow
+    list_of_types = ["CreateCommitEvent","CreateEvent","DeleteEvent","ForkEvent","GollumEvent","IssueCommentEvent","IssuesEvent",
+                     "MemberEvent","PublicEvent","PullRequestEvent","PullRequestReviewEvent","PullRequestReviewCommentEvent",
+                     "PullRequestReviewThreadEvent","PushEvent","ReleaseEvent","SponsorshipEvent","WatchEvent"]
+    while True:
+        user = input("Would you like to filter by a certain type or types(Yes/No): ")
+        if user == "Yes":
+            print("Please enter the types you want to search for:")
+            print("List of available types:")
+            for type in list_of_types:
+                print(type)
+            user_types = input("If searching for multiple types, seperate each one with a space:")
+            split_types = user_types.split()
+            progressing, filtered_types = process_types(split_types, list_of_types)
+            if progressing == False:
+                filtering_types = True
+                give_output(final_output, filtering_types, filtered_types)
+                break
+        elif user == "No":
+            filtering_types = False
+            filtered_types = None
+            give_output(final_output, filtering_types, filtered_types)
+            break
+        else:
+            print("command is not valid, try again") 
 
+def process_types(user_types, list):
+    lowercase_list = [s.lower() for s in list]
+    for f_type in user_types:
+        lower_f_type = f_type.lower()
+        if lower_f_type not in lowercase_list:
+            print(f"{f_type} is not a valid event, please try again")
+    else:
+        print("done")
+        progressing = False
+        return progressing, user_types
 
+    
+    
 
-
-event_dict, event_name_check, event_type_check = search_for_values(r,events)
-final_output = output_sets(event_dict, event_name_check, event_type_check)
-give_output(final_output)
+while True:   
+    event_dict, event_name_check, event_type_check = search_for_values(r,events)
+    final_output = output_sets(event_dict, event_name_check, event_type_check)
+    filter_type(final_output)
 #Work on making output fancy tomorrow
 
