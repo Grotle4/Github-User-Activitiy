@@ -1,5 +1,4 @@
 import requests
-import argparse
 
 
 
@@ -28,6 +27,7 @@ def search_for_values(r, events):
     except:
         pass
 
+
 def output_sets(event_dict, event_name_check, event_type_check):
     stored_dict = {}
     list_of_dicts = []
@@ -49,18 +49,17 @@ def output_sets(event_dict, event_name_check, event_type_check):
                 list_of_dicts.append(finished_dict) #when loop is finish, append copy of list to final list of dictionaries
     return list_of_dicts    
 
+
 def give_output(final_output,filtering_types,filtered_types):
     print("Output:")
     for event in final_output: #Do this for each event taken
             if filtering_types == True:
                 for filtered in filtered_types:
                     if event["type"].lower() == filtered.lower():
-                        print("working")
                         output_message(event)
             else:
                 output_message(event)
                 
-
 
 def output_message(event):
     match event["type"]:
@@ -99,8 +98,7 @@ def output_message(event):
                 case "WatchEvent":
                     print(f"Starred {event["amount"]} {check_plural(event, "repository")} on {event["name"]}")
     
-                
-
+            
 def check_plural(event, word):
     if event["amount"] > 1:
         if word.endswith("h"):
@@ -118,8 +116,8 @@ def filter_type(final_output):
     list_of_types = ["CreateCommitEvent","CreateEvent","DeleteEvent","ForkEvent","GollumEvent","IssueCommentEvent","IssuesEvent",
                      "MemberEvent","PublicEvent","PullRequestEvent","PullRequestReviewEvent","PullRequestReviewCommentEvent",
                      "PullRequestReviewThreadEvent","PushEvent","ReleaseEvent","SponsorshipEvent","WatchEvent"]
-    user = input("Would you like to filter by a certain type or types(Yes/No): ")
-    if user == "Yes":
+    user = input("Would you like to filter by a certain type or types(Yes/No): ").lower()
+    if user == "yes":
         print("Please enter the types you want to search for:")
         print("List of available types:")
         for type in list_of_types:
@@ -130,14 +128,14 @@ def filter_type(final_output):
         if progressing == False:
             filtering_types = True
             give_output(final_output, filtering_types, filtered_types)
-            print("Done")
             return True
-    elif user == "No":
+    elif user == "no":
         filtering_types = False
         filtered_types = None
         give_output(final_output, filtering_types, filtered_types)
     else:
-        print("command is not valid, try again") 
+        print("Command is not valid, try again") 
+
 
 def process_types(user_types, list):
     lowercase_list = [s.lower() for s in list]
@@ -146,7 +144,6 @@ def process_types(user_types, list):
         if lower_f_type not in lowercase_list:
             print(f"{f_type} is not a valid event, please try again")
     else:
-        print("done")
         progressing = False
         return progressing, user_types
 
@@ -159,22 +156,24 @@ def retry():
         case "no":
             return False
         case _ :
-            print("not valid, please try again")
+            print("Not valid, please try again")
+
 
 def main():
-    while True:
-        username = input("Please enter a username: ").lower()
-        url = f"https://api.github.com/users/{username}/events"
-        r = requests.get(url)
-        events = r.json()
-        filtering_types = False
-        event_dict, event_name_check, event_type_check = search_for_values(r,events)
-        final_output = output_sets(event_dict, event_name_check, event_type_check)
-        filter_type(final_output)
-        if not retry():
-            break
+    try:
+        while True:
+            username = input("Please enter a username: ").lower()
+            url = f"https://api.github.com/users/{username}/events"
+            r = requests.get(url)
+            events = r.json()
+            filtering_types = False
+            event_dict, event_name_check, event_type_check = search_for_values(r,events)
+            final_output = output_sets(event_dict, event_name_check, event_type_check)
+            filter_type(final_output)
+            if not retry():
+                break
+    except TypeError:
+        print("Invalid username")
+
 
 main()
-    
-
-#Work on making output fancy tomorrow
