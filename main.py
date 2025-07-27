@@ -1,11 +1,7 @@
 import requests
 import argparse
 
-username = input("Please enter a username: ").lower()
-url = f"https://api.github.com/users/{username}/events"
-r = requests.get(url)
-events = r.json()
-filtering_types = False
+
 
 def search_for_values(r, events):
     try:
@@ -122,27 +118,26 @@ def filter_type(final_output):
     list_of_types = ["CreateCommitEvent","CreateEvent","DeleteEvent","ForkEvent","GollumEvent","IssueCommentEvent","IssuesEvent",
                      "MemberEvent","PublicEvent","PullRequestEvent","PullRequestReviewEvent","PullRequestReviewCommentEvent",
                      "PullRequestReviewThreadEvent","PushEvent","ReleaseEvent","SponsorshipEvent","WatchEvent"]
-    while True:
-        user = input("Would you like to filter by a certain type or types(Yes/No): ")
-        if user == "Yes":
-            print("Please enter the types you want to search for:")
-            print("List of available types:")
-            for type in list_of_types:
-                print(type)
-            user_types = input("If searching for multiple types, seperate each one with a space:")
-            split_types = user_types.split()
-            progressing, filtered_types = process_types(split_types, list_of_types)
-            if progressing == False:
-                filtering_types = True
-                give_output(final_output, filtering_types, filtered_types)
-                break
-        elif user == "No":
-            filtering_types = False
-            filtered_types = None
+    user = input("Would you like to filter by a certain type or types(Yes/No): ")
+    if user == "Yes":
+        print("Please enter the types you want to search for:")
+        print("List of available types:")
+        for type in list_of_types:
+            print(type)
+        user_types = input("If searching for multiple types, seperate each one with a space:")
+        split_types = user_types.split()
+        progressing, filtered_types = process_types(split_types, list_of_types)
+        if progressing == False:
+            filtering_types = True
             give_output(final_output, filtering_types, filtered_types)
-            break
-        else:
-            print("command is not valid, try again") 
+            print("Done")
+            return True
+    elif user == "No":
+        filtering_types = False
+        filtered_types = None
+        give_output(final_output, filtering_types, filtered_types)
+    else:
+        print("command is not valid, try again") 
 
 def process_types(user_types, list):
     lowercase_list = [s.lower() for s in list]
@@ -156,11 +151,30 @@ def process_types(user_types, list):
         return progressing, user_types
 
     
+def retry():
+    user = input("Would you like to restart again: ")
+    match user.lower():
+        case "yes":
+            return True
+        case "no":
+            return False
+        case _ :
+            print("not valid, please try again")
+
+def main():
+    while True:
+        username = input("Please enter a username: ").lower()
+        url = f"https://api.github.com/users/{username}/events"
+        r = requests.get(url)
+        events = r.json()
+        filtering_types = False
+        event_dict, event_name_check, event_type_check = search_for_values(r,events)
+        final_output = output_sets(event_dict, event_name_check, event_type_check)
+        filter_type(final_output)
+        if not retry():
+            break
+
+main()
     
 
-while True:   
-    event_dict, event_name_check, event_type_check = search_for_values(r,events)
-    final_output = output_sets(event_dict, event_name_check, event_type_check)
-    filter_type(final_output)
 #Work on making output fancy tomorrow
-
