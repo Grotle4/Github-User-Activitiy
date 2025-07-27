@@ -51,12 +51,15 @@ def output_sets(event_dict, event_name_check, event_type_check):
 
 
 def give_output(final_output,filtering_types,filtered_types):
-    print("Output:")
+    #print("")
+    print(f"\nOutput:\n")
+    #print("")
     for event in final_output: #Do this for each event taken
             if filtering_types == True:
                 for filtered in filtered_types:
                     if event["type"].lower() == filtered.lower():
                         output_message(event)
+
             else:
                 output_message(event)
                 
@@ -64,39 +67,39 @@ def give_output(final_output,filtering_types,filtered_types):
 def output_message(event):
     match event["type"]:
                 case "CommitCommentEvent":
-                    print(f"Created {event["amount"]} {check_plural(event, "comment")} on {event["name"]}")
+                    print(f"Created {event["amount"]} {check_plural(event, "comment")} on {event["name"]}\n")
                 case "CreateEvent":
-                    print(f"Created {event["amount"]} {check_plural(event, "branch")} on {event["name"]}")
+                    print(f"Created {event["amount"]} {check_plural(event, "branch")} on {event["name"]}\n")
                 case "DeleteEvent":
-                    print(f"Deleted {event["amount"]} {check_plural(event, "branch")} on {event["name"]}")
+                    print(f"Deleted {event["amount"]} {check_plural(event, "branch")} on {event["name"]}\n")
                 case "ForkEvent":
-                    print(f"Forked {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                    print(f"Forked {event["amount"]} {check_plural(event, "time")} on {event["name"]}\n")
                 case "GollumEvent":
-                    print(f"Created or Updated wiki page {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                    print(f"Created or Updated wiki page {event["amount"]} {check_plural(event, "time")} on {event["name"]}\n")
                 case "IssueCommentEvent":
-                    print(f"Had activity {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                    print(f"Had activity {event["amount"]} {check_plural(event, "time")} on {event["name"]}\n")
                 case "IssuesEvent":
-                    print(f"Had an issue {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                    print(f"Had an issue {event["amount"]} {check_plural(event, "time")} on {event["name"]}\n")
                 case "MemberEvent":
-                    print(f"Had an activity with collaborators {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                    print(f"Had an activity with collaborators {event["amount"]} {check_plural(event, "time")} on {event["name"]}\n")
                 case "PublicEvent":
-                    print(f"Made repository public {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                    print(f"Made repository public {event["amount"]} {check_plural(event, "time")} on {event["name"]}\n")
                 case "PullRequestEvent":
-                    print(f"Had Pull Request activity {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                    print(f"Had Pull Request activity {event["amount"]} {check_plural(event, "time")} on {event["name"]}\n")
                 case "PullRequestReviewEvent":
-                    print(f"Reviewed Pull Request {event["amount"]} {check_plural(event, "time")} on {event["name"]}")
+                    print(f"Reviewed Pull Request {event["amount"]} {check_plural(event, "time")} on {event["name"]}\n")
                 case "PullRequestReviewCommentEvent":
-                    print(f"Gave {event["amount"]} {check_plural(event, "comment")} for Pull requests on {event["name"]}")
+                    print(f"Gave {event["amount"]} {check_plural(event, "comment")} for Pull requests on {event["name"]}\n")
                 case "PullRequestReviewThreadEvent":
-                    print(f"Gave {event["amount"]} {check_plural(event, "comment")} for Pull request comments on {event["name"]}")
+                    print(f"Gave {event["amount"]} {check_plural(event, "comment")} for Pull request comments on {event["name"]}\n")
                 case "PushEvent":
-                    print(f"Pushed {event["amount"]} {check_plural(event, "commit")} on {event["name"]}")
+                    print(f"Pushed {event["amount"]} {check_plural(event, "commit")} on {event["name"]}\n")
                 case "ReleaseEvent":
-                    print(f"Released {event["amount"]} {check_plural(event, "commits")} on {event["name"]}")
+                    print(f"Released {event["amount"]} {check_plural(event, "commits")} on {event["name"]}\n")
                 case "SponsorshipEvent":
-                    print(f"Gave {event["amount"]} Sponsorship {check_plural(event, "listing")} on {event["name"]}")
+                    print(f"Gave {event["amount"]} Sponsorship {check_plural(event, "listing")} on {event["name"]}\n")
                 case "WatchEvent":
-                    print(f"Starred {event["amount"]} {check_plural(event, "repository")} on {event["name"]}")
+                    print(f"Starred {event["amount"]} {check_plural(event, "repository")} on {event["name"]}\n")
     
             
 def check_plural(event, word):
@@ -118,11 +121,11 @@ def filter_type(final_output):
                      "PullRequestReviewThreadEvent","PushEvent","ReleaseEvent","SponsorshipEvent","WatchEvent"]
     user = input("Would you like to filter by a certain type or types(Yes/No): ").lower()
     if user == "yes":
-        print("Please enter the types you want to search for:")
-        print("List of available types:")
+        print("Please enter the types you want to search for")
+        print(f"\nList of available types:\n")
         for type in list_of_types:
             print(type)
-        user_types = input("If searching for multiple types, seperate each one with a space:")
+        user_types = input(f"\nIf searching for multiple types, seperate each one with a space:")
         split_types = user_types.split()
         progressing, filtered_types = process_types(split_types, list_of_types)
         if progressing == False:
